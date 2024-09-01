@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTaskRequest;
 
 class TaskController extends Controller
 {
@@ -12,31 +14,22 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $tasks = Task::select('id', 'name', 'priority','project_id', 'created_at')
+        ->orderBy('id','desc')->get();
+        $projects = Project::select('id', 'name')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('task.index', compact('tasks','projects'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
         //
-    }
+        Task::create($request->validated());
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully');
     }
 
     /**
@@ -44,7 +37,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $projects = Project::select('id', 'name')->get();
+
+        return view('task.edit', compact('task','projects'));
     }
 
     /**
@@ -53,6 +48,9 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         //
+        $task->update($request->all());
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
     /**
@@ -61,5 +59,8 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success-delete', 'Task deleted successfully');
     }
 }
