@@ -4,6 +4,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12">
+
+            <h5>Available Tasks</h5>
+
             <div class="card">
 
                 @if (session('success'))
@@ -106,6 +109,9 @@
                                 </td>
                             </tr>
                             @endforeach
+
+                        @else
+                            <tr id="no-data" class="text-center"><td colspan="6">No task found</td></tr>
                         @endif      
                     </tbody>
                 </table>

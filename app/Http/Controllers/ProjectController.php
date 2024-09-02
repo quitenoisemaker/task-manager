@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -13,15 +14,19 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        $projects = Project::select('id', 'name')->orderBy('id', 'desc')->get();
+        $projects = Project::fetch()->orderBy('id', 'desc')->get();
         return view('project.index', compact('projects'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        $project = Project::find($request->project_id);
+        
+        $projectTasks = $project->tasks()->orderBy('priority')->get();
+
+        return response()->json($projectTasks);
     }
 }

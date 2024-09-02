@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
@@ -14,11 +15,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::select('id', 'name', 'priority','project_id', 'created_at')
-        ->orderBy('id','desc')->get();
-        $projects = Project::select('id', 'name')->get();
+        $tasks = Task::fetch()
+            ->orderBy('priority')->get();
 
-        return view('task.index', compact('tasks','projects'));
+        $projects = Project::fetch()->get();
+
+        return view('task.index', compact('tasks', 'projects'));
     }
 
     /**
@@ -37,26 +39,29 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        $projects = Project::select('id', 'name')->get();
+        $projects = Project::fetch()->get();
 
-        return view('task.edit', compact('task','projects'));
+        return view('task.edit', compact('task', 'projects'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(StoreTaskRequest $request, Task $task)
     {
         //
-        $task->update($request->all());
+        $task->update($request->validated());
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  Task  $task
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): \Illuminate\Http\RedirectResponse
     {
         //
         $task->delete();

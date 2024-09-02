@@ -14,6 +14,13 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         //
-        Project::factory(5)->create();
+        $count = 5;
+
+        for ($i = 1; $i <= $count; $i++) {
+            Project::updateOrCreate(
+                ['name' => 'project ' . $i], 
+                ['name' => 'project ' . $i]  
+            );
+        }
     }
 }

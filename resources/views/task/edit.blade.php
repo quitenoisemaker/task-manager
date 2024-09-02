@@ -5,12 +5,22 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error )
+                               <li>{{$error}}</li> 
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('tasks.update', $task->id) }}">
                     @csrf 
                     @method('PUT')
 
                     <div class="form-row p-4">
                         <div class="form-group col-md-12">
+                            <input type="hidden" name="project_id" value="{{$task->project_id}}">
                             <label for="project">Project</label>
                             <select id="project" class="form-control" name="project_id">
                             <option selected disabled value="{{$task->project_id}}">{{$task->project->name}}</option>
