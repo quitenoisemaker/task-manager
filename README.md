@@ -21,7 +21,7 @@ A simple web-based task management application built with Laravel. This applicat
 
 ### Prerequisites
 
-- PHP >= 8.0
+- PHP >= 8.2
 - Composer
 - MySQL
 - Node.js and npm (for compiling front-end assets)
